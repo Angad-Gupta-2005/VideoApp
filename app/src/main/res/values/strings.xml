@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">VideoApp</string>
+
+<!--    Adding some new text -->
+    <string name="all_videos">All Videos</string>
+    <string name="all_folders">All Folders</string>
 </resources>
