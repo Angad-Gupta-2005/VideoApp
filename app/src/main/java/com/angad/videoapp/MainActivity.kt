@@ -6,6 +6,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.Fragment
 import com.angad.videoapp.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -20,11 +21,29 @@ class MainActivity : AppCompatActivity() {
 //        enableEdgeToEdge()
         setContentView(binding.root)
 
+//        calling the function to set fragment and setting the VideoFragment as a default fragment
+        setFragment(VideosFragment())
+
+//        setting the custom theme
+        setTheme(R.style.coolPinkNav)  //not working properly
+
 //        binding.helloAn.text = "Angad Gupta"
 
         binding.bottomNav.setOnItemSelectedListener {
-            Toast.makeText(this@MainActivity, "Item Selected",Toast.LENGTH_SHORT).show()
+             when(it.itemId){
+                 R.id.videoView -> setFragment(VideosFragment())
+                 R.id.folderView -> setFragment(FoldersFragment())
+             }
             return@setOnItemSelectedListener true
         }
     }
+
+//    Function to set the fragment
+    private fun setFragment(fragment: Fragment){
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.fragmentFL, fragment)
+        transaction.disallowAddToBackStack()
+        transaction.commit()
+    }
+
 }

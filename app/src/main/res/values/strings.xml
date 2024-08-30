@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">VideoApp</string>
 
-<!--    Adding some new text -->
+    <!--    Adding some new text -->
     <string name="all_videos">All Videos</string>
     <string name="all_folders">All Folders</string>
+    <string name="total_videos">Total Videos</string>
+    <string name="total_folders">Total Folders</string>
 </resources>
