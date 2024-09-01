@@ -47,8 +47,6 @@ class MainActivity : AppCompatActivity() {
 //        setting the custom theme
         setTheme(R.style.coolPinkNav)  //not working properly
 
-//        binding.helloAn.text = "Angad Gupta"
-
         binding.bottomNav.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.videoView -> setFragment(VideosFragment())

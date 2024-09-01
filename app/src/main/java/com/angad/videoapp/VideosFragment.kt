@@ -5,6 +5,8 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.angad.videoapp.databinding.FragmentVideosBinding
 
 class VideosFragment : Fragment() {
 
@@ -13,7 +15,24 @@ class VideosFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_videos, container, false)
+        val view = inflater.inflate(R.layout.fragment_videos, container, false)
+
+        val binding = FragmentVideosBinding.bind(view)
+
+//        creating temporary list of video in future it will be remove
+        val tempList = ArrayList<String>()
+        tempList.add("First Video")
+        tempList.add("Second Video")
+        tempList.add("Third Video")
+        tempList.add("Fourth Video")
+        tempList.add("Fifth Video")
+
+        
+        binding.recyclerView.setHasFixedSize(true)
+        binding.recyclerView.setItemViewCacheSize(10)
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.adapter = VideoAdapter(requireContext(), tempList)
+        return view
     }
     
 }
