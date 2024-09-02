@@ -17,21 +17,13 @@ class VideosFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_videos, container, false)
 
+//        Initialised the RecyclerView
         val binding = FragmentVideosBinding.bind(view)
 
-//        creating temporary list of video in future it will be remove
-        val tempList = ArrayList<String>()
-        tempList.add("First Video")
-        tempList.add("Second Video")
-        tempList.add("Third Video")
-        tempList.add("Fourth Video")
-        tempList.add("Fifth Video")
-
-        
         binding.recyclerView.setHasFixedSize(true)
         binding.recyclerView.setItemViewCacheSize(10)
         binding.recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerView.adapter = VideoAdapter(requireContext(), tempList)
+        binding.recyclerView.adapter = VideoAdapter(requireContext(), MainActivity.videoList)
         return view
     }
     

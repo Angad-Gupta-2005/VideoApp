@@ -4,9 +4,12 @@ import android.Manifest.permission.READ_EXTERNAL_STORAGE
 import android.Manifest.permission.READ_MEDIA_AUDIO
 import android.Manifest.permission.READ_MEDIA_VIDEO
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -14,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.angad.videoapp.databinding.ActivityMainBinding
+import java.io.File
 import kotlin.system.exitProcess
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +25,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
 //    for navigation drawer
     private lateinit var toggle: ActionBarDrawerToggle
+
+//    For fetch data for media storage
+    companion object{
+        lateinit var videoList: ArrayList<Video>
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +39,7 @@ class MainActivity : AppCompatActivity() {
 //        enableEdgeToEdge()
         setContentView(binding.root)
 
-//        request permissions
-        requestRuntimePermission()
+
 
 //        For Nav Drawer
         toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
@@ -39,10 +47,13 @@ class MainActivity : AppCompatActivity() {
         toggle.syncState()
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-
-
+//        request permissions of Media storage
+        if (requestRuntimePermission()){
+            videoList = getAllVideos()
 //        calling the function to set fragment and setting the VideoFragment as a default fragment
-        setFragment(VideosFragment())
+            setFragment(VideosFragment())
+        }
+
 
 //        setting the custom theme
         setTheme(R.style.coolPinkNav)  //not working properly
@@ -81,10 +92,20 @@ class MainActivity : AppCompatActivity() {
     private fun requestRuntimePermission(): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
 //            For android 13 or above
+            if (checkSelfPermission(READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED &&
+                checkSelfPermission(READ_MEDIA_AUDIO) == PackageManager.PERMISSION_GRANTED){
+                return true
+            }
+
             ActivityCompat.requestPermissions(this, arrayOf(READ_MEDIA_VIDEO, READ_MEDIA_AUDIO), 13)
             return false
         } else {
 //            For version below android 13
+            if (checkSelfPermission(WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                checkSelfPermission(READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                return true
+            }
+
             ActivityCompat.requestPermissions(
                 this, arrayOf(
                     WRITE_EXTERNAL_STORAGE,
@@ -93,8 +114,7 @@ class MainActivity : AppCompatActivity() {
             )
             return false
         }
-        return true
-    }
+     }
 
 
     override fun onRequestPermissionsResult(
@@ -124,4 +144,61 @@ class MainActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+//    create the cursor object and access the data
+    @SuppressLint("Recycle", "Range")
+    private fun getAllVideos(): ArrayList<Video>{
+        val tempList = ArrayList<Video>()
+
+        val projection = arrayOf(
+            MediaStore.Video.Media.TITLE,
+            MediaStore.Video.Media.SIZE,
+            MediaStore.Video.Media._ID,
+            MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Video.Media.DATA,
+            MediaStore.Video.Media.DATE_ADDED,
+            MediaStore.Video.Media.DURATION
+            )
+//    Fetch the mention data
+        val cursor = this.contentResolver.query(
+            MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
+            projection,
+            null,
+            null,
+            MediaStore.Video.Media.DATE_ADDED + " DESC "
+        )
+
+        if (cursor != null){
+            if (cursor.moveToNext()){
+                do {
+                    val titleC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE))
+                    val sizeC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.SIZE))
+                    val idC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media._ID))
+                    val folderC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME))
+                    val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA))
+                    val durationC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DURATION)).toLong()
+
+                    try {
+                        val file = File(pathC)
+                        val artUriC = Uri.fromFile(file)
+                        val video = Video(
+                            title = titleC,
+                            id = idC,
+                            folderName = folderC,
+                            duration = durationC,
+                            size = sizeC,
+                            path = pathC,
+                            artUri = artUriC
+                            )
+                        if (file.exists()){
+                            tempList.add(video)
+                        }
+                    }catch (e: Exception){
+                        Toast.makeText(this, "Error fetching video: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }while (cursor.moveToNext())
+            }
+        }
+        cursor?.close()
+        return tempList
+    }
 }
