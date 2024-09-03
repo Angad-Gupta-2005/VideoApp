@@ -11,3 +11,10 @@ data class Video(
     val path: String,
     val artUri: Uri
 )
+
+// Data class to store the data of folder
+
+data class Folder(
+    val id: String,
+    val folderName: String
+)

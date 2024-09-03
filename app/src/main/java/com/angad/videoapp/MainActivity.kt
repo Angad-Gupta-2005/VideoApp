@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
 //    For fetch data for media storage
     companion object{
         lateinit var videoList: ArrayList<Video>
+        lateinit var folderList: ArrayList<Folder>
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +50,8 @@ class MainActivity : AppCompatActivity() {
 
 //        request permissions of Media storage
         if (requestRuntimePermission()){
+//            Initialized the folderList
+            folderList = ArrayList()
             videoList = getAllVideos()
 //        calling the function to set fragment and setting the VideoFragment as a default fragment
             setFragment(VideosFragment())
@@ -148,12 +151,14 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("Recycle", "Range")
     private fun getAllVideos(): ArrayList<Video>{
         val tempList = ArrayList<Video>()
+        val tempFolderList = ArrayList<String>()
 
         val projection = arrayOf(
             MediaStore.Video.Media.TITLE,
             MediaStore.Video.Media.SIZE,
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.BUCKET_DISPLAY_NAME,
+            MediaStore.Video.Media.BUCKET_ID,
             MediaStore.Video.Media.DATA,
             MediaStore.Video.Media.DATE_ADDED,
             MediaStore.Video.Media.DURATION
@@ -174,6 +179,7 @@ class MainActivity : AppCompatActivity() {
                     val sizeC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.SIZE))
                     val idC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media._ID))
                     val folderC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME))
+                    val folderIdC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.BUCKET_ID))
                     val pathC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA))
                     val durationC = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DURATION)).toLong()
 
@@ -192,6 +198,13 @@ class MainActivity : AppCompatActivity() {
                         if (file.exists()){
                             tempList.add(video)
                         }
+
+//                        For adding folders
+                        if (!tempFolderList.contains(folderC)){
+                            tempFolderList.add(folderC)
+                            folderList.add(Folder(id = folderIdC, folderName = folderC))
+                        }
+
                     }catch (e: Exception){
                         Toast.makeText(this, "Error fetching video: ${e.message}", Toast.LENGTH_SHORT).show()
                     }
