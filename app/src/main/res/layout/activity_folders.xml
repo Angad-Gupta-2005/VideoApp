@@ -2,14 +2,14 @@
 <androidx.appcompat.widget.LinearLayoutCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VideosFragment"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    tools:context=".FoldersActivity">
 
     <TextView
-        android:id="@+id/totalVideos"
+        android:id="@+id/totalVideosFA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/total_videos"
@@ -18,7 +18,7 @@
         />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+        android:id="@+id/recyclerViewFA"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical"
