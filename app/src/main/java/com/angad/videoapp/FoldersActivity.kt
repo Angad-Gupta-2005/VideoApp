@@ -17,7 +17,7 @@ import java.io.File
 class FoldersActivity : AppCompatActivity() {
 
     companion object{
-        private lateinit var currentFolderVideos: ArrayList<Video>
+        lateinit var currentFolderVideos: ArrayList<Video>
     }
 
     @SuppressLint("SetTextI18n")
@@ -43,7 +43,7 @@ class FoldersActivity : AppCompatActivity() {
         binding.recyclerViewFA.setHasFixedSize(true)
         binding.recyclerViewFA.setItemViewCacheSize(8)
         binding.recyclerViewFA.layoutManager = LinearLayoutManager(this@FoldersActivity)
-        binding.recyclerViewFA.adapter = VideoAdapter(this@FoldersActivity, currentFolderVideos)
+        binding.recyclerViewFA.adapter = VideoAdapter(this@FoldersActivity, currentFolderVideos, isFolder = true)
         binding.totalVideosFA.text = "Total Videos: ${currentFolderVideos.size}"
 
     }

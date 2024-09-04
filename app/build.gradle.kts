@@ -52,5 +52,10 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
 //    Glide third party library to load images from device
-    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation(libs.glide)
+
+//    ExoPlayer library that can play audio and video
+    implementation("androidx.media3:media3-exoplayer:1.4.1")
+    implementation("androidx.media3:media3-ui:1.4.1")
+
 }
