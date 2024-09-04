@@ -128,6 +128,10 @@ class MainActivity : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 13) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                Fixing the bug when first time user give permission
+                folderList = ArrayList()
+                videoList = getAllVideos()
+                setFragment(VideosFragment())
                 Toast.makeText(this, "Permission Granted ", Toast.LENGTH_SHORT).show()
             } else {
 //                ActivityCompat.requestPermissions(this, arrayOf(WRITE_EXTERNAL_STORAGE), 13)

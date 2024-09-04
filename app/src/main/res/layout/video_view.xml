@@ -14,7 +14,7 @@
         android:id="@+id/videoImg"
         android:layout_width="70dp"
         android:layout_height="50dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginHorizontal="8dp"
         android:src="@mipmap/ic_video_player"
         android:contentDescription="@string/image"
         app:shapeAppearanceOverlay="@style/curved"/>
