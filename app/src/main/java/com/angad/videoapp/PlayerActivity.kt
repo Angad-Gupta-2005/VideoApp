@@ -50,6 +50,8 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun createPlayer(){
+        binding.videoTitle.text = playerList[position].title
+        binding.videoTitle.isSelected = true
 //        Creating an object of player
         player =  ExoPlayer.Builder(this).build()
 //        Set up player view
