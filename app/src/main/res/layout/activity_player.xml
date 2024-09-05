@@ -27,6 +27,7 @@
         android:background="#42000000">
 
         <ImageButton
+            android:id="@+id/backBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_back"
@@ -73,6 +74,7 @@
 
 <!--    Play button   -->
     <ImageButton
+        android:id="@+id/playPauseBtn"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:contentDescription="@string/play_btn"
@@ -106,26 +108,37 @@
             android:src="@drawable/ic_repeat"
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/repeat_btn"
-            app:tint="@color/white" />
+            app:tint="@color/white"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground"/>
 
 
         <ImageButton
+            android:id="@+id/prevBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_previous"
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/prev_btn"
             app:tint="@color/white"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground"
             />
 
 
         <ImageButton
+            android:id="@+id/nextBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:src="@drawable/ic_next"
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/next_btn"
             app:tint="@color/white"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground"
             />
 
 
@@ -136,6 +149,9 @@
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/fullscreen_btn"
             app:tint="@color/white"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:selectableItemBackground"
             />
 
 

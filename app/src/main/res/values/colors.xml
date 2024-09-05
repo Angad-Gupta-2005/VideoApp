@@ -11,4 +11,6 @@
     <color name="purple_700">#3700B3</color>
     <color name="teal_700">#FF018786</color>
     <color name="transparentWhite">#88FFFFFF</color>
+    <color name="bottom_bar_background">#B0000000</color>
+    <color name="black_opacity">#98000000</color>
 </resources>

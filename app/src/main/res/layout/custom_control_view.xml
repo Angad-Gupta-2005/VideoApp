@@ -7,16 +7,16 @@
   <View android:id="@id/exo_controls_background"
       android:layout_width="0dp"
       android:layout_height="0dp"
-      android:background="@color/exo_black_opacity_60"/>
+      android:background="@color/black_opacity"/>
 
 
 
   <FrameLayout android:id="@id/exo_bottom_bar"
       android:layout_width="match_parent"
-      android:layout_height="@dimen/exo_styled_bottom_bar_height"
-      android:layout_marginTop="@dimen/exo_styled_bottom_bar_margin_top"
+      android:layout_height="60dp"
+      android:layout_marginTop="10dp"
       android:layout_gravity="bottom"
-      android:background="@color/exo_bottom_bar_background">
+      android:background="@color/bottom_bar_background">
 
 
     <androidx.media3.ui.DefaultTimeBar
