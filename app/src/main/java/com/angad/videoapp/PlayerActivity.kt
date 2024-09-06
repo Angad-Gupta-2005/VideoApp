@@ -2,29 +2,40 @@ package com.angad.videoapp
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.view.View
 import android.view.Window
 import android.view.WindowManager
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.OptIn
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.AspectRatioFrameLayout
 import com.angad.videoapp.databinding.ActivityPlayerBinding
+import kotlinx.coroutines.Runnable
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityPlayerBinding
+    private lateinit var runnable: Runnable
 
     companion object{
         lateinit var player: ExoPlayer
         lateinit var playerList: ArrayList<Video>
         var position: Int = -1
-        var repeat: Boolean = false
+        private var repeat: Boolean = false
+        private var isFullscreen: Boolean = false
+        private var isLocked: Boolean = false
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
@@ -78,7 +89,8 @@ class PlayerActivity : AppCompatActivity() {
     }
 
 //    Setting all button functionality
-    private fun initializeBinding(){
+@OptIn(UnstableApi::class)
+private fun initializeBinding(){
         binding.backBtn.setOnClickListener {
             finish()
         }
@@ -106,6 +118,34 @@ class PlayerActivity : AppCompatActivity() {
                 binding.repeatBtn.setImageResource(R.drawable.ic_repeat_on)
             }
         }
+
+//    Functionality of fullscreen feature
+        binding.fullscreenBtn.setOnClickListener {
+            if (isFullscreen){
+                isFullscreen = false
+                playInFullscreen(enable = false)
+            }
+            else{
+                isFullscreen = true
+                playInFullscreen(enable = true)
+            }
+        }
+
+//    Functionality of lock button
+        binding.lockBtn.setOnClickListener {
+            if (!isLocked){
+                isLocked = true
+                binding.playerView.hideController()
+                binding.playerView.useController = false
+                binding.lockBtn.setImageResource(R.drawable.ic_close_lock)
+            }
+            else{
+                isLocked = false
+                binding.playerView.useController = true
+                binding.playerView.showController()
+                binding.lockBtn.setImageResource(R.drawable.ic_lock_open)
+            }
+        }
     }
 
     private fun createPlayer(){
@@ -129,6 +169,9 @@ class PlayerActivity : AppCompatActivity() {
                     nextPrevVideo()
             }
         })
+        playInFullscreen(enable = isFullscreen)
+//        Calling the function to set hide and show the buttons
+        setVisibility()
     }
 
 //    Functionality of play and pause of video
@@ -172,6 +215,46 @@ class PlayerActivity : AppCompatActivity() {
             }
         }
     }
+
+    //    Function to perform full screen mode functionality
+    @OptIn(UnstableApi::class)
+    private fun playInFullscreen(enable: Boolean){
+            if (enable){
+                binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FILL
+                player.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING
+                binding.fullscreenBtn.setImageResource(R.drawable.ic_fullscreen_exit)
+            }
+            else{
+                binding.playerView.resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
+                player.videoScalingMode = C.VIDEO_SCALING_MODE_SCALE_TO_FIT
+                binding.fullscreenBtn.setImageResource(R.drawable.ic_fullscreen)
+            }
+        }
+
+    //    Function to perform the hide and show functionality of buttons
+    @OptIn(UnstableApi::class)
+    private fun setVisibility(){
+        runnable = Runnable {
+            if (binding.playerView.isControllerFullyVisible){
+                changeVisibility(View.VISIBLE)
+            }
+            else{
+                changeVisibility(View.INVISIBLE)
+            }
+            Handler(Looper.getMainLooper()).postDelayed(runnable, 300)
+        }
+        Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
+    }
+
+    private fun changeVisibility(visibility: Int){
+        binding.topController.visibility = visibility
+        binding.bottomController.visibility = visibility
+        binding.playPauseBtn.visibility = visibility
+        if (isLocked) binding.lockBtn.visibility = View.VISIBLE
+        else binding.lockBtn.visibility = visibility
+
+    }
+
 
     override fun onDestroy() {
         super.onDestroy()
