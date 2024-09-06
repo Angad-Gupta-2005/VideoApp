@@ -6,7 +6,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PlayerActivity">
+    tools:context=".PlayerActivity"
+    android:background="@color/black">
 
     <androidx.media3.ui.PlayerView
         android:id="@+id/playerView"
@@ -103,9 +104,10 @@
         android:gravity="end|bottom">
 
         <ImageButton
+            android:id="@+id/repeatBtn"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_repeat"
+            android:src="@drawable/ic_repeat_off"
             android:backgroundTint="@android:color/transparent"
             android:contentDescription="@string/repeat_btn"
             app:tint="@color/white"
